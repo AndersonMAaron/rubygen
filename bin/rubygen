@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+require 'logger'
+require 'optparse'
+require_relative '../lib/rubygen'
+
+@options = { :log_level => 'info' }
+@opt_parser = OptionParser.new do |opts|
+  opts.banner = "#{File.basename($0)}: -p [project-name] (-d [destination-dir]) (-l [log-level]) (-h [help])"
+
+  opts.on( '-p', '--project-name PROJNAME', "Name of the Ruby project to generate" ) do |name|
+    @options[:project_name] = name
+  end
+
+  opts.on( '-d', '--destination-dir DESTDIR', "Parent directory to generate the repository in" ) do |dir|
+    @options[:destination_dir] = File.expand_path(dir)
+  end
+
+  opts.on('-l', '--log-level <level>', 'Log level verbosity') do |log_level|
+    @options[:log_level] = log_level
+  end
+
+  opts.on('-h', '--help', 'Display help information') do
+    abort(opts)
+  end
+end
+@opt_parser.parse!
+
+def fail(msg = '')
+  Rubygen.fail([msg, @opt_parser.banner].join("\n"))
+end
+
+fail("Need to specify --project-name (-p)") unless @options[:project_name]
+
+@logger = Logger.new(STDERR)
+@logger.level = Logger.const_get(@options[:log_level].upcase)
+@script_name = File.basename($0)
+
+Rubygen.generate_project(@options[:project_name], @options[:destination_dir])
+
+@logger.info(@script_name) { 'done' }

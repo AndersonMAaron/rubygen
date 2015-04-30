@@ -1,0 +1,18 @@
+* Use ERB to fill out templates
+
+
+The following should be generated (with respect to repo root):
+* README.md
+* repository_name.gemspec
+* docs/
+* lib/
+* lib/repository_name.rb
+* bin/
+* spec/
+* spec/spec_helper.rb
+* spec/spec.opts
+* Rakefile
+* .gitignore
+* .gitattributes
+* Gemfile?
+* Vagrantfile?
